@@ -1,0 +1,230 @@
+/* Main timeline panel */
+.timeline {
+  height: 330px;
+  background: #111827;
+  color: white;
+  overflow: auto;
+  padding: 10px;
+  border-top: 1px solid #374151;
+  user-select: none;
+}
+
+.timeline-header {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #e5e7eb;
+  font-weight: 600;
+}
+
+.timeline-content {
+  position: relative;
+}
+
+/* Ruler */
+.timeline-ruler {
+  display: flex;
+  height: 35px;
+  min-width: 6000px;
+  border-bottom: 1px solid #374151;
+  color: #9ca3af;
+  font-size: 12px;
+  position: relative;
+  cursor: pointer;
+  background: #0f172a;
+}
+
+.ruler-mark {
+  width: 80px;
+  flex-shrink: 0;
+  position: relative;
+  padding-left: 4px;
+}
+
+.ruler-mark::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 12px;
+  width: 1px;
+  background: #6b7280;
+}
+
+.ruler-mark.major::before {
+  height: 18px;
+  background: #9ca3af;
+}
+
+/* Track */
+.track {
+  position: relative;
+  height: 80px;
+  min-width: 6000px;
+  background: #0f172a;
+  border: 1px solid #374151;
+  margin-top: 10px;
+  border-radius: 8px;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+/* Better track styling */
+.track.video-track {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  border-left: 3px solid #3b82f6;
+}
+
+.track.audio-track {
+  background: linear-gradient(180deg, #0f172a 0%, #052e16 100%);
+  border-left: 3px solid #22c55e;
+}
+
+.track-label {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  pointer-events: none;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+/* Hide old track-title since we have label now */
+.track-title {
+  display: none;
+}
+
+/* Empty tracks look inviting */
+.track.empty {
+  opacity: 0.55;
+}
+
+.track.empty:hover {
+  opacity: 0.9;
+  background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+}
+
+/* Clips */
+.clip {
+  position: absolute;
+  top: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: white;
+  font-size: 12px;
+  cursor: grab;
+  user-select: none;
+  background: #2563eb;
+  transition: filter 0.15s, outline 0.15s, box-shadow 0.15s;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.clip:hover {
+  filter: brightness(1.2);
+}
+
+.clip.selected {
+  outline: 3px solid #ef4444;
+  filter: brightness(1.1);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+}
+
+.clip.video {
+  background: linear-gradient(180deg, #2563eb, #1d4ed8);
+}
+
+.clip.audio {
+  background: linear-gradient(180deg, #16a34a, #15803d);
+}
+
+/* V2 / V3 distinct colors */
+.clip.video-on-v2 {
+  background: linear-gradient(180deg, #7c3aed, #5b21b6) !important;
+  border: 1px solid #a78bfa;
+}
+
+.clip.video-on-v3 {
+  background: linear-gradient(180deg, #db2777, #9d174d) !important;
+  border: 1px solid #f9a8d4;
+}
+
+/* Resize handle (right edge) */
+.resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: ew-resize;
+  z-index: 2;
+  transition: background 0.15s;
+}
+
+.resize-handle:hover {
+  background: white;
+}
+
+/* Trim handle (left edge) */
+.trim-handle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: ew-resize;
+  z-index: 2;
+  transition: background 0.15s;
+}
+
+.trim-handle:hover {
+  background: white;
+}
+
+/* Playhead */
+.playhead {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: #ef4444;
+  pointer-events: auto;
+  cursor: ew-resize;
+  z-index: 10;
+  box-shadow: 0 0 4px rgba(239, 68, 68, 0.6);
+}
+
+.playhead::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: -7px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #ef4444;
+}
+/* Audio clips get a darker base so waveforms pop */
+.clip.audio {
+  background: linear-gradient(180deg, #16a34a, #15803d);
+  padding: 0;
+  overflow: hidden;
+}
+
+.clip.audio.selected {
+  outline: 3px solid #ef4444;
+}

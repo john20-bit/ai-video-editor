@@ -1,0 +1,78 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #111827;
+  color: white;
+}
+
+.toolbar {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1f2937;
+  padding-left: 15px;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+}
+
+.mediaPanel {
+  width: 260px;
+  background: #374151;
+  padding: 15px;
+}
+
+.mediaItem {
+  background: #4b5563;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.preview {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: #0f172a;
+}
+
+.effects {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #1f2937;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.timeline {
+  height: 350px;
+  background: #1f2937;
+  padding: 10px;
+}
+
+.track {
+  height: 100px;
+  position: relative;
+  border: 1px solid #374151;
+  background: #0f172a;
+  margin-bottom: 10px;
+}
+
+.ruler {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 10px;
+}

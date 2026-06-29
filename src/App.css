@@ -1,0 +1,249 @@
+/* ---------- GLOBAL ---------- */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #181818;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 14px;
+  background: #3b82f6;
+  color: white;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+/* ---------- TOOLBAR ---------- */
+
+.toolbar {
+  height: 60px;
+  background: #202020;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 15px;
+}
+
+/* ---------- MAIN ---------- */
+
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ---------- MEDIA ---------- */
+
+.media-panel {
+  width: 260px;
+  background: #252525;
+  border-right: 1px solid #333;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.media-item {
+  background: #353535;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.media-item:hover {
+  background: #4a4a4a;
+}
+
+/* ---------- PREVIEW ---------- */
+
+.preview {
+  flex: 1;
+  background: #101010;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.preview video {
+  width: 75%;
+  max-height: 85%;
+  border-radius: 10px;
+  background: black;
+  border: 2px solid #333;
+}
+
+/* ---------- EFFECTS ---------- */
+
+.effects {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #252525;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #444;
+  width: 180px;
+}
+
+.effects button {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* ---------- TIMELINE ---------- */
+
+.timeline {
+  height: 330px;
+  background: #202020;
+  border-top: 1px solid #333;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+}
+
+/* ---------- RULER ---------- */
+
+.ruler {
+  height: 35px;
+  display: flex;
+  position: sticky;
+  top: 0;
+  background: #2a2a2a;
+  border-bottom: 1px solid #444;
+  z-index: 20;
+}
+
+.tick {
+  flex-shrink: 0;
+  border-left: 1px solid #555;
+  color: #aaa;
+  font-size: 11px;
+  padding-left: 4px;
+  height: 35px;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 5px;
+}
+
+/* ---------- TRACKS ---------- */
+
+.timelineTracks {
+  position: relative;
+  min-width: 4000px;
+  padding: 10px;
+}
+
+.track {
+  margin-bottom: 12px;
+}
+
+.trackTitle {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #ddd;
+  font-weight: bold;
+}
+
+.trackBody {
+  position: relative;
+  height: 60px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+/* ---------- CLIPS ---------- */
+
+.clip {
+  position: absolute;
+  top: 9px;
+  height: 42px;
+  border-radius: 7px;
+  background: linear-gradient(#3b82f6, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: move;
+  overflow: hidden;
+  user-select: none;
+  font-weight: bold;
+  color: white;
+  transition: transform .12s;
+}
+
+.clip:hover {
+  transform: scale(1.02);
+}
+
+.clip.selected {
+  outline: 3px solid #ef4444;
+}
+
+/* ---------- RESIZE HANDLE ---------- */
+
+.resizeHandle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  background: rgba(255,255,255,.5);
+}
+
+/* ---------- PLAYHEAD ---------- */
+
+.playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: red;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.playhead::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: red;
+}
+
+/* ---------- SCROLLBAR ---------- */
+
+.timeline::-webkit-scrollbar {
+  height: 10px;
+}
+
+.timeline::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 20px;
+}
+
+.timeline::-webkit-scrollbar-track {
+  background: #2b2b2b;
+}
