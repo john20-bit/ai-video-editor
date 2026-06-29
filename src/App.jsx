@@ -1,10 +1,3 @@
-const handleSmartReframe = async () => {
-  alert("Smart Reframe button clicked!");  // ← ADD THIS
-  if (isReframing) return;
-  
-  const videoClip = project.tracks
-    .flatMap((t) => t.clips)
-    .find((c) => c.type === "video" && c.url);
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
 import projectData from "./data/project";
@@ -25,12 +18,7 @@ function App() {
     ...projectData,
     tracks: [
       ...projectData.tracks,
-      {
-        id: 5,
-        name: "T1",
-        kind: "text",
-        clips: [],
-      },
+      { id: 5, name: "T1", kind: "text", clips: [] },
     ],
   }));
 
@@ -94,10 +82,7 @@ function App() {
       alert("No text track!");
       return;
     }
-    const lastEnd = textTrack.clips.reduce(
-      (max, c) => Math.max(max, c.start + c.duration),
-      0
-    );
+    const lastEnd = textTrack.clips.reduce((max, c) => Math.max(max, c.start + c.duration), 0);
     const textClip = {
       id: Date.now() + Math.random(),
       name: `Title ${textTrack.clips.length + 1}`,
@@ -109,8 +94,7 @@ function App() {
       fontSize: 48,
       color: "#ffffff",
       backgroundColor: "rgba(0,0,0,0.6)",
-      x: 50,
-      y: 50,
+      x: 50, y: 50,
       fontWeight: "bold",
       textAlign: "center",
     };
@@ -125,28 +109,15 @@ function App() {
 
   const handleGenerateCaptions = async () => {
     if (isGeneratingCaptions) return;
-
-    const videoClip = project.tracks
-      .flatMap((t) => t.clips)
-      .find((c) => c.type === "video" && c.url);
-
-    if (!videoClip) {
-      alert("Please add a video to the timeline first!");
-      return;
-    }
-
+    const videoClip = project.tracks.flatMap((t) => t.clips).find((c) => c.type === "video" && c.url);
+    if (!videoClip) { alert("Please add a video to the timeline first!"); return; }
     setIsGeneratingCaptions(true);
     setCaptionProgress("Starting...");
-
     try {
-      const captions = await transcribeAudio(videoClip.url, (status) => {
-        setCaptionProgress(status);
-      });
-
+      const captions = await transcribeAudio(videoClip.url, (status) => setCaptionProgress(status));
       setProject((prev) => {
         const textTrack = prev.tracks.find((t) => t.kind === "text");
         if (!textTrack) return prev;
-
         const newClips = captions.map((cap, i) => ({
           id: Date.now() + Math.random() + i,
           name: `Caption ${i + 1}`,
@@ -158,12 +129,10 @@ function App() {
           fontSize: 38,
           color: "#ffffff",
           backgroundColor: "rgba(0,0,0,0.8)",
-          x: 50,
-          y: 88,
+          x: 50, y: 88,
           fontWeight: "bold",
           textAlign: "center",
         }));
-
         return {
           ...prev,
           tracks: prev.tracks.map((t) =>
@@ -171,7 +140,6 @@ function App() {
           ),
         };
       });
-
       setCaptionProgress(`Done! ${captions.length} captions created`);
       setTimeout(() => setCaptionProgress(""), 3000);
     } catch (err) {
@@ -184,40 +152,23 @@ function App() {
 
   const handleSmartReframe = async () => {
     if (isReframing) return;
-    
-    const videoClip = project.tracks
-      .flatMap((t) => t.clips)
-      .find((c) => c.type === "video" && c.url);
-    
-    if (!videoClip) {
-      alert("Please add a video to the timeline first!");
-      return;
-    }
-    
+    const videoClip = project.tracks.flatMap((t) => t.clips).find((c) => c.type === "video" && c.url);
+    if (!videoClip) { alert("Please add a video to the timeline first!"); return; }
     setIsReframing(true);
     setReframeProgress("Starting...");
-    
     try {
-      const analysis = await analyzeVideo(videoClip.url, reframeAspect, (status) => {
-        setReframeProgress(status);
-      });
-      
+      const analysis = await analyzeVideo(videoClip.url, reframeAspect, (status) => setReframeProgress(status));
       setProject((prev) => ({
         ...prev,
         tracks: prev.tracks.map((t) => ({
           ...t,
-          clips: t.clips.map((c) => 
-            c.id === videoClip.id 
-              ? { 
-                  ...c, 
-                  reframeAnalysis: analysis, 
-                  reframeAspect: reframeAspect,
-                } 
+          clips: t.clips.map((c) =>
+            c.id === videoClip.id
+              ? { ...c, reframeAnalysis: analysis, reframeAspect: reframeAspect }
               : c
           ),
         })),
       }));
-      
       setReframeProgress(`Done! ${analysis.cropData.length} frames analyzed`);
       setTimeout(() => setReframeProgress(""), 3000);
     } catch (err) {
