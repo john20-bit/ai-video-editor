@@ -13,6 +13,9 @@ function Toolbar({
   isExporting,
   exportProgress,
   onAddText,
+  onGenerateCaptions,
+  isGeneratingCaptions,
+  captionProgress,
 }) {
   return (
     <div
@@ -25,26 +28,34 @@ function Toolbar({
         padding: "0 15px",
         borderBottom: "1px solid #374151",
         overflowX: "auto",
+        color: "white",
       }}
     >
       <h2 style={{ marginRight: "10px", fontSize: "18px", whiteSpace: "nowrap", color: "white" }}>
         AI Video Editor
       </h2>
 
-      <button onClick={onUndo} disabled={!canUndo} style={btnStyle(canUndo)}>
-        Undo
-      </button>
-      <button onClick={onRedo} disabled={!canRedo} style={btnStyle(canRedo)}>
-        Redo
-      </button>
+      <button onClick={onUndo} disabled={!canUndo} style={btnStyle(canUndo)}>Undo</button>
+      <button onClick={onRedo} disabled={!canRedo} style={btnStyle(canRedo)}>Redo</button>
 
       <div style={{ width: 1, height: 30, background: "#374151", margin: "0 5px" }} />
 
       <button onClick={splitClip} style={btn}>Split</button>
       <button onClick={duplicateClip} style={btn}>Duplicate</button>
       <button onClick={deleteClip} style={btn}>Delete</button>
-      <button onClick={onAddText} style={{ ...btn, background: "#7c3aed", color: "white" }}>
-        + Add Text
+      <button onClick={onAddText} style={{ ...btn, background: "#7c3aed", color: "white" }}>+ Text</button>
+
+      <button
+        onClick={onGenerateCaptions}
+        disabled={isGeneratingCaptions}
+        style={{
+          ...btn,
+          background: isGeneratingCaptions ? "#0e7490" : "#0891b2",
+          color: "white",
+          opacity: isGeneratingCaptions ? 0.7 : 1,
+        }}
+      >
+        {isGeneratingCaptions ? captionProgress || "AI..." : "AI Captions"}
       </button>
 
       <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>

@@ -8,11 +8,11 @@ import Timeline from "./components/timeline/Timeline";
 import InspectorPanel from "./components/inspector/InspectorPanel";
 import { useUndoRedo } from "./hooks/useUndoRedo";
 import { exportTimeline, downloadBlob } from "./utils/exporter";
+import { transcribeAudio } from "./utils/captions";
 
 const SNAP_THRESHOLD = 0.3;
 
 function App() {
-  // Use a state-tracked project data so it re-reads from file on remount
   const [initialProject] = useState(() => ({
     ...projectData,
     tracks: [
@@ -33,6 +33,8 @@ function App() {
   const [videoFilter, setVideoFilter] = useState("none");
   const [isExporting, setIsExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState(0);
+  const [isGeneratingCaptions, setIsGeneratingCaptions] = useState(false);
+  const [captionProgress, setCaptionProgress] = useState("");
   const videoRef = useRef(null);
   const trackRefs = useRef({});
 
@@ -78,7 +80,7 @@ function App() {
   const addText = () => {
     const textTrack = project.tracks.find((t) => t.kind === "text");
     if (!textTrack) {
-      alert("No text track found! Please refresh the page (Ctrl+Shift+R).");
+      alert("No text track!");
       return;
     }
     const lastEnd = textTrack.clips.reduce(
@@ -108,6 +110,65 @@ function App() {
       ),
     }));
     setSelectedClip(textClip.id);
+  };
+
+  const handleGenerateCaptions = async () => {
+    if (isGeneratingCaptions) return;
+
+    const videoClip = project.tracks
+      .flatMap((t) => t.clips)
+      .find((c) => c.type === "video" && c.url);
+
+    if (!videoClip) {
+      alert("Please add a video to the timeline first!");
+      return;
+    }
+
+    setIsGeneratingCaptions(true);
+    setCaptionProgress("Starting...");
+
+    try {
+      const captions = await transcribeAudio(videoClip.url, (status) => {
+        setCaptionProgress(status);
+      });
+
+      setProject((prev) => {
+        const textTrack = prev.tracks.find((t) => t.kind === "text");
+        if (!textTrack) return prev;
+
+        const newClips = captions.map((cap, i) => ({
+          id: Date.now() + Math.random() + i,
+          name: `Caption ${i + 1}`,
+          start: cap.start,
+          duration: cap.duration,
+          type: "text",
+          track: textTrack.id,
+          text: cap.text,
+          fontSize: 38,
+          color: "#ffffff",
+          backgroundColor: "rgba(0,0,0,0.8)",
+          x: 50,
+          y: 88,
+          fontWeight: "bold",
+          textAlign: "center",
+        }));
+
+        return {
+          ...prev,
+          tracks: prev.tracks.map((t) =>
+            t.id === textTrack.id ? { ...t, clips: [...t.clips, ...newClips] } : t
+          ),
+        };
+      });
+
+      setCaptionProgress(`Done! ${captions.length} captions created`);
+      setTimeout(() => setCaptionProgress(""), 3000);
+    } catch (err) {
+      alert("Caption generation failed: " + err.message);
+      setCaptionProgress("");
+    } finally {
+      setIsGeneratingCaptions(false);
+    }
   };
 
   const deleteClip = () => {
@@ -355,6 +416,9 @@ function App() {
         isExporting={isExporting}
         exportProgress={exportProgress}
         onAddText={addText}
+        onGenerateCaptions={handleGenerateCaptions}
+        isGeneratingCaptions={isGeneratingCaptions}
+        captionProgress={captionProgress}
       />
       <div style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0 }}>
         <MediaPanel videos={project.media || []} upload={upload} addVideo={addVideo} />
