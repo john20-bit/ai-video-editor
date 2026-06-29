@@ -1,3 +1,10 @@
+const handleSmartReframe = async () => {
+  alert("Smart Reframe button clicked!");  // ← ADD THIS
+  if (isReframing) return;
+  
+  const videoClip = project.tracks
+    .flatMap((t) => t.clips)
+    .find((c) => c.type === "video" && c.url);
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
 import projectData from "./data/project";
