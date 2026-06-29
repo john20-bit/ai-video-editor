@@ -12,7 +12,21 @@ import { exportTimeline, downloadBlob } from "./utils/exporter";
 const SNAP_THRESHOLD = 0.3;
 
 function App() {
-  const [project, setProject, history] = useUndoRedo(projectData);
+  // Use a state-tracked project data so it re-reads from file on remount
+  const [initialProject] = useState(() => ({
+    ...projectData,
+    tracks: [
+      ...projectData.tracks,
+      {
+        id: 5,
+        name: "T1",
+        kind: "text",
+        clips: [],
+      },
+    ],
+  }));
+
+  const [project, setProject, history] = useUndoRedo(initialProject);
   const [playhead, setPlayhead] = useState(0);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [selectedClip, setSelectedClip] = useState(null);
@@ -59,6 +73,41 @@ function App() {
       ...prev,
       tracks: prev.tracks.map((t) => t.id === targetTrack ? { ...t, clips: [...t.clips, clip] } : t),
     }));
+  };
+
+  const addText = () => {
+    const textTrack = project.tracks.find((t) => t.kind === "text");
+    if (!textTrack) {
+      alert("No text track found! Please refresh the page (Ctrl+Shift+R).");
+      return;
+    }
+    const lastEnd = textTrack.clips.reduce(
+      (max, c) => Math.max(max, c.start + c.duration),
+      0
+    );
+    const textClip = {
+      id: Date.now() + Math.random(),
+      name: `Title ${textTrack.clips.length + 1}`,
+      start: lastEnd,
+      duration: 3,
+      type: "text",
+      track: textTrack.id,
+      text: "Your Text Here",
+      fontSize: 48,
+      color: "#ffffff",
+      backgroundColor: "rgba(0,0,0,0.6)",
+      x: 50,
+      y: 50,
+      fontWeight: "bold",
+      textAlign: "center",
+    };
+    setProject((prev) => ({
+      ...prev,
+      tracks: prev.tracks.map((t) =>
+        t.id === textTrack.id ? { ...t, clips: [...t.clips, textClip] } : t
+      ),
+    }));
+    setSelectedClip(textClip.id);
   };
 
   const deleteClip = () => {
@@ -305,10 +354,18 @@ function App() {
         onExport={handleExport}
         isExporting={isExporting}
         exportProgress={exportProgress}
+        onAddText={addText}
       />
-      <div style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0, height: "calc(100vh - 60px - 330px)" }}>
+      <div style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0 }}>
         <MediaPanel videos={project.media || []} upload={upload} addVideo={addVideo} />
-        <PreviewPanel selectedVideo={selectedVideo} videoRef={videoRef} videoFilter={videoFilter} setVideoFilter={setVideoFilter} />
+        <PreviewPanel
+          selectedVideo={selectedVideo}
+          videoRef={videoRef}
+          videoFilter={videoFilter}
+          setVideoFilter={setVideoFilter}
+          textClips={project.tracks.find((t) => t.kind === "text")?.clips || []}
+          playhead={playhead || 0}
+        />
         <InspectorPanel clip={getSelectedClipObj()} onUpdate={updateSelectedClip} onClose={() => setSelectedClip(null)} />
       </div>
       <div style={{ flexShrink: 0 }}>

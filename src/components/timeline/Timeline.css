@@ -1,6 +1,5 @@
-/* Main timeline panel */
 .timeline {
-  height: 330px;
+  height: 450px;
   background: #111827;
   color: white;
   overflow: auto;
@@ -20,7 +19,6 @@
   position: relative;
 }
 
-/* Ruler */
 .timeline-ruler {
   display: flex;
   height: 35px;
@@ -55,7 +53,6 @@
   background: #9ca3af;
 }
 
-/* Track */
 .track {
   position: relative;
   height: 80px;
@@ -67,7 +64,6 @@
   transition: background 0.2s, opacity 0.2s;
 }
 
-/* Better track styling */
 .track.video-track {
   background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
   border-left: 3px solid #3b82f6;
@@ -94,12 +90,10 @@
   letter-spacing: 1px;
 }
 
-/* Hide old track-title since we have label now */
 .track-title {
   display: none;
 }
 
-/* Empty tracks look inviting */
 .track.empty {
   opacity: 0.55;
 }
@@ -109,7 +103,6 @@
   background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
 }
 
-/* Clips */
 .clip {
   position: absolute;
   top: 35px;
@@ -147,9 +140,21 @@
 
 .clip.audio {
   background: linear-gradient(180deg, #16a34a, #15803d);
+  padding: 0;
+  overflow: hidden;
 }
 
-/* V2 / V3 distinct colors */
+.clip.text {
+  background: linear-gradient(180deg, #7c3aed, #5b21b6);
+  border: 2px solid #a78bfa;
+  padding: 0;
+  overflow: hidden;
+}
+
+.clip.text.selected {
+  outline: 3px solid #ef4444;
+}
+
 .clip.video-on-v2 {
   background: linear-gradient(180deg, #7c3aed, #5b21b6) !important;
   border: 1px solid #a78bfa;
@@ -160,7 +165,6 @@
   border: 1px solid #f9a8d4;
 }
 
-/* Resize handle (right edge) */
 .resize-handle {
   position: absolute;
   right: 0;
@@ -177,7 +181,6 @@
   background: white;
 }
 
-/* Trim handle (left edge) */
 .trim-handle {
   position: absolute;
   left: 0;
@@ -194,7 +197,6 @@
   background: white;
 }
 
-/* Playhead */
 .playhead {
   position: absolute;
   top: 0;
@@ -217,14 +219,4 @@
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-top: 10px solid #ef4444;
-}
-/* Audio clips get a darker base so waveforms pop */
-.clip.audio {
-  background: linear-gradient(180deg, #16a34a, #15803d);
-  padding: 0;
-  overflow: hidden;
-}
-
-.clip.audio.selected {
-  outline: 3px solid #ef4444;
 }

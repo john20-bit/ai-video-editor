@@ -12,6 +12,7 @@ function Toolbar({
   onExport,
   isExporting,
   exportProgress,
+  onAddText,
 }) {
   return (
     <div
@@ -26,51 +27,25 @@ function Toolbar({
         overflowX: "auto",
       }}
     >
-      <h2 style={{ marginRight: "10px", fontSize: "18px", whiteSpace: "nowrap" }}>
-        🎬 AI Editor
+      <h2 style={{ marginRight: "10px", fontSize: "18px", whiteSpace: "nowrap", color: "white" }}>
+        AI Video Editor
       </h2>
 
-      <button
-        onClick={onUndo}
-        disabled={!canUndo}
-        style={{
-          opacity: canUndo ? 1 : 0.4,
-          cursor: "pointer",
-          padding: "6px 10px",
-          background: "#374151",
-          color: "white",
-          border: "none",
-          borderRadius: 6,
-          whiteSpace: "nowrap",
-        }}
-      >
-        ↶ Undo
+      <button onClick={onUndo} disabled={!canUndo} style={btnStyle(canUndo)}>
+        Undo
       </button>
-      <button
-        onClick={onRedo}
-        disabled={!canRedo}
-        style={{
-          opacity: canRedo ? 1 : 0.4,
-          cursor: "pointer",
-          padding: "6px 10px",
-          background: "#374151",
-          color: "white",
-          border: "none",
-          borderRadius: 6,
-          whiteSpace: "nowrap",
-        }}
-      >
-        ↷ Redo
+      <button onClick={onRedo} disabled={!canRedo} style={btnStyle(canRedo)}>
+        Redo
       </button>
 
       <div style={{ width: 1, height: 30, background: "#374151", margin: "0 5px" }} />
 
-      <button onClick={splitClip} style={btn}>✂ Split</button>
-      <button onClick={duplicateClip} style={btn}>📋 Dup</button>
-      <button onClick={deleteClip} style={btn}>🗑 Del</button>
-      <button onClick={() => moveTrack(1)} style={btn}>V1</button>
-      <button onClick={() => moveTrack(2)} style={btn}>V2</button>
-      <button onClick={() => moveTrack(3)} style={btn}>A1</button>
+      <button onClick={splitClip} style={btn}>Split</button>
+      <button onClick={duplicateClip} style={btn}>Duplicate</button>
+      <button onClick={deleteClip} style={btn}>Delete</button>
+      <button onClick={onAddText} style={{ ...btn, background: "#7c3aed", color: "white" }}>
+        + Add Text
+      </button>
 
       <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
         <button
@@ -87,21 +62,8 @@ function Toolbar({
             whiteSpace: "nowrap",
           }}
         >
-          {isExporting ? `⏳ ${exportProgress}%` : "📥 Export MP4"}
+          {isExporting ? `Exporting ${exportProgress}%` : "Export MP4"}
         </button>
-
-        <div style={{ width: 1, height: 30, background: "#374151" }} />
-
-        <span style={{ whiteSpace: "nowrap" }}>🔍</span>
-        <input
-          type="range"
-          min="20"
-          max="200"
-          value={zoom}
-          onChange={(e) => setZoom(Number(e.target.value))}
-          style={{ width: 80 }}
-        />
-        <span style={{ minWidth: 50, fontSize: 11, whiteSpace: "nowrap" }}>{zoom}px/s</span>
       </div>
     </div>
   );
@@ -117,5 +79,17 @@ const btn = {
   whiteSpace: "nowrap",
   fontSize: 12,
 };
+
+const btnStyle = (enabled) => ({
+  opacity: enabled ? 1 : 0.4,
+  cursor: enabled ? "pointer" : "not-allowed",
+  padding: "6px 10px",
+  background: "#374151",
+  color: "white",
+  border: "none",
+  borderRadius: 6,
+  whiteSpace: "nowrap",
+  fontSize: 12,
+});
 
 export default Toolbar;
