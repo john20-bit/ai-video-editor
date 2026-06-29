@@ -49,7 +49,7 @@ function Toolbar({
       <button onClick={duplicateClip} style={btn}>Duplicate</button>
       <button onClick={deleteClip} style={btn}>Delete</button>
       <button onClick={onAddText} style={{ ...btn, background: "#7c3aed", color: "white" }}>+ Text</button>
-      
+
       <button
         onClick={onGenerateCaptions}
         disabled={isGeneratingCaptions}

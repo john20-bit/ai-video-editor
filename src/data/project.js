@@ -33,6 +33,12 @@ const projectData = {
         { id: 3, name: "Music", start: 0, duration: 13, type: "audio", track: 4, url: "" },
       ],
     },
+    {
+      id: 5,
+      name: "T1",
+      kind: "text",
+      clips: [],
+    },
   ],
 };
 

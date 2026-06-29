@@ -78,10 +78,7 @@ function App() {
 
   const addText = () => {
     const textTrack = project.tracks.find((t) => t.kind === "text");
-    if (!textTrack) {
-      alert("No text track!");
-      return;
-    }
+    if (!textTrack) { alert("No text track!"); return; }
     const lastEnd = textTrack.clips.reduce((max, c) => Math.max(max, c.start + c.duration), 0);
     const textClip = {
       id: Date.now() + Math.random(),
