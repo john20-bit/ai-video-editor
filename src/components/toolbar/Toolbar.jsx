@@ -16,6 +16,11 @@ function Toolbar({
   onGenerateCaptions,
   isGeneratingCaptions,
   captionProgress,
+  onSmartReframe,
+  isReframing,
+  reframeProgress,
+  reframeAspect,
+  setReframeAspect,
 }) {
   return (
     <div
@@ -44,7 +49,7 @@ function Toolbar({
       <button onClick={duplicateClip} style={btn}>Duplicate</button>
       <button onClick={deleteClip} style={btn}>Delete</button>
       <button onClick={onAddText} style={{ ...btn, background: "#7c3aed", color: "white" }}>+ Text</button>
-
+      
       <button
         onClick={onGenerateCaptions}
         disabled={isGeneratingCaptions}
@@ -56,6 +61,37 @@ function Toolbar({
         }}
       >
         {isGeneratingCaptions ? captionProgress || "AI..." : "AI Captions"}
+      </button>
+
+      <select
+        value={reframeAspect}
+        onChange={(e) => setReframeAspect(e.target.value)}
+        style={{
+          padding: "6px 8px",
+          background: "#374151",
+          color: "white",
+          border: "none",
+          borderRadius: 6,
+          fontSize: 11,
+          cursor: "pointer",
+        }}
+      >
+        <option value="9:16">9:16</option>
+        <option value="1:1">1:1</option>
+        <option value="4:5">4:5</option>
+        <option value="16:9">16:9</option>
+      </select>
+      <button
+        onClick={onSmartReframe}
+        disabled={isReframing}
+        style={{
+          ...btn,
+          background: isReframing ? "#be185d" : "#ec4899",
+          color: "white",
+          opacity: isReframing ? 0.7 : 1,
+        }}
+      >
+        {isReframing ? reframeProgress || "AI..." : "Smart Reframe"}
       </button>
 
       <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
