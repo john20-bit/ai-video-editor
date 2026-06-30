@@ -9,7 +9,6 @@ import InspectorPanel from "./components/inspector/InspectorPanel";
 import { useUndoRedo } from "./hooks/useUndoRedo";
 import { exportTimeline, downloadBlob } from "./utils/exporter";
 import { transcribeAudio } from "./utils/captions";
-import { analyzeVideo } from "./utils/reframe";
 
 const SNAP_THRESHOLD = 0.3;
 
@@ -31,9 +30,6 @@ function App() {
   const [exportProgress, setExportProgress] = useState(0);
   const [isGeneratingCaptions, setIsGeneratingCaptions] = useState(false);
   const [captionProgress, setCaptionProgress] = useState("");
-  const [isReframing, setIsReframing] = useState(false);
-  const [reframeProgress, setReframeProgress] = useState("");
-  const [reframeAspect, setReframeAspect] = useState("9:16");
   const videoRef = useRef(null);
   const trackRefs = useRef({});
 
@@ -91,7 +87,8 @@ function App() {
       fontSize: 48,
       color: "#ffffff",
       backgroundColor: "rgba(0,0,0,0.6)",
-      x: 50, y: 50,
+      x: 50,
+      y: 50,
       fontWeight: "bold",
       textAlign: "center",
     };
@@ -126,7 +123,8 @@ function App() {
           fontSize: 38,
           color: "#ffffff",
           backgroundColor: "rgba(0,0,0,0.8)",
-          x: 50, y: 88,
+          x: 50,
+          y: 88,
           fontWeight: "bold",
           textAlign: "center",
         }));
@@ -144,35 +142,6 @@ function App() {
       setCaptionProgress("");
     } finally {
       setIsGeneratingCaptions(false);
-    }
-  };
-
-  const handleSmartReframe = async () => {
-    if (isReframing) return;
-    const videoClip = project.tracks.flatMap((t) => t.clips).find((c) => c.type === "video" && c.url);
-    if (!videoClip) { alert("Please add a video to the timeline first!"); return; }
-    setIsReframing(true);
-    setReframeProgress("Starting...");
-    try {
-      const analysis = await analyzeVideo(videoClip.url, reframeAspect, (status) => setReframeProgress(status));
-      setProject((prev) => ({
-        ...prev,
-        tracks: prev.tracks.map((t) => ({
-          ...t,
-          clips: t.clips.map((c) =>
-            c.id === videoClip.id
-              ? { ...c, reframeAnalysis: analysis, reframeAspect: reframeAspect }
-              : c
-          ),
-        })),
-      }));
-      setReframeProgress(`Done! ${analysis.cropData.length} frames analyzed`);
-      setTimeout(() => setReframeProgress(""), 3000);
-    } catch (err) {
-      alert("Smart Reframe failed: " + err.message);
-      setReframeProgress("");
-    } finally {
-      setIsReframing(false);
     }
   };
 
@@ -424,11 +393,6 @@ function App() {
         onGenerateCaptions={handleGenerateCaptions}
         isGeneratingCaptions={isGeneratingCaptions}
         captionProgress={captionProgress}
-        onSmartReframe={handleSmartReframe}
-        isReframing={isReframing}
-        reframeProgress={reframeProgress}
-        reframeAspect={reframeAspect}
-        setReframeAspect={setReframeAspect}
       />
       <div style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0 }}>
         <MediaPanel videos={project.media || []} upload={upload} addVideo={addVideo} />
